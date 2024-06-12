@@ -1,5 +1,10 @@
 # Semantic search analysis
 # Setup instructions
+
+# requirements download
+```
+pip install nltk spacy flask pandas scikit-learn numpy
+```
 ## 1. Clone the project
 ```
 git clone https://github.com/Birhanu-worku1811/Semantic-Search-Analysis--NLP.git
