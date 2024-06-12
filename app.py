@@ -54,8 +54,8 @@ def semantic_search(query, doc_vectors, documents, top_n=3):
     results = []
     for idx in similar_doc_indices:
         title = documents.iloc[idx]['title']
-        clean_text = documents.iloc[idx]['clean_text']
-        results.append((title, clean_text))
+        content = documents.iloc[idx]['content']
+        results.append((title, content))
     return results
 
 
