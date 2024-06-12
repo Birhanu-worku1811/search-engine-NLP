@@ -1,4 +1,4 @@
-"""Uncomment the following lines when running the first time then comment it"""
+# Uncomment the following lines when running the first time then comment it
 # import nltk
 # nltk.download('punkt')
 # nltk.download('stopwords')
@@ -34,23 +34,30 @@ def preprocess_text(text):
     return ' '.join(tokens)
 
 
-df['clean_text'] = df['content'].apply(preprocess_text)
+df['clean_title'] = df['title'].apply(preprocess_text)
+df['clean_content'] = df['content'].apply(preprocess_text)
 
 # Check if precomputed doc vectors exist, if not, compute and save them
 try:
-    doc_vectors = np.load('doc_vectors.npy')
+    doc_vectors_title = np.load('doc_vectors_title.npy')
+    doc_vectors_content = np.load('doc_vectors_content.npy')
 except FileNotFoundError:
-    doc_vectors = np.array([nlp(text).vector for text in df['clean_text']])
-    np.save('doc_vectors.npy', doc_vectors)
+    doc_vectors_title = np.array([nlp(text).vector for text in df['clean_title']])
+    doc_vectors_content = np.array([nlp(text).vector for text in df['clean_content']])
+    np.save('doc_vectors_title.npy', doc_vectors_title)
+    np.save('doc_vectors_content.npy', doc_vectors_content)
 
 
 # semantic search function
-def semantic_search(query, doc_vectors, documents, top_n=3):
+def semantic_search(query, doc_vectors_title, doc_vectors_content, documents, top_n=5):
     query = preprocess_text(query)
     query_vector = nlp(query).vector.reshape(1, -1)
-    similarities = cosine_similarity(query_vector, doc_vectors).flatten()
-    # Sort documents by similarity scores
-    similar_doc_indices = np.argsort(similarities)[::-1][:top_n]
+    similarities_title = cosine_similarity(query_vector, doc_vectors_title).flatten()
+    similarities_content = cosine_similarity(query_vector, doc_vectors_content).flatten()
+    # Combine similarities from title and content
+    similarities_combined = 0.5 * similarities_title + 0.5 * similarities_content
+    # Sort documents by combined similarity scores
+    similar_doc_indices = np.argsort(similarities_combined)[::-1][:top_n]
     results = []
     for idx in similar_doc_indices:
         title = documents.iloc[idx]['title']
@@ -67,7 +74,7 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     query = request.form['query']
-    results = semantic_search(query, doc_vectors, df)
+    results = semantic_search(query, doc_vectors_title, doc_vectors_content, df)
     return render_template('index.html', results=results)
 
 
