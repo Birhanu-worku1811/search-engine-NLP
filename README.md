@@ -11,7 +11,7 @@ git clone https://github.com/Birhanu-worku1811/Semantic-Search-Analysis--NLP.git
  nltk.download('stopwords')
  nltk.download('wordnet')
  ```
-##3. run the command
+## 3. run the command
 ```
 python app.py
 ```
@@ -19,6 +19,6 @@ python app.py
 ```
 python3 app.py 
 ``` 
-##4. Go to [Localhost](http://127.0.0.1:5000)
+## 4. Go to [Localhost](http://127.0.0.1:5000)
 
-##5. Enter the query and search
+## 5. Enter the query and search
