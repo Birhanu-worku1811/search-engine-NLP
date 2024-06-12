@@ -5,6 +5,9 @@
 ```
 pip install nltk spacy flask pandas scikit-learn numpy
 ```
+```
+python -m spacy download en_core_web_md
+```
 ## 1. Clone the project
 ```
 git clone https://github.com/Birhanu-worku1811/Semantic-Search-Analysis--NLP.git
