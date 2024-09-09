@@ -20,7 +20,7 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        input[type="text"] {
+        input[type="text"], input[type="number"] {
             padding: 5px;
             font-size: 16px;
             border: 1px solid #ccc;
@@ -60,6 +60,7 @@
     <h1>Semantic Search</h1>
     <form action="/predict" method="post">
         <input type="text" name="query" placeholder="Enter your query" value="{{ request.form['query'] if request.form['query'] else '' }}">
+        <input type="number" name="num_results" placeholder="Number of results" min="1" value="{{ request.form['num_results'] if request.form['num_results'] else '5' }}">
         <button type="submit">Search</button>
     </form>
     {% if results %}

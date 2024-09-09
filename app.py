@@ -1,8 +1,5 @@
-# Uncomment the following lines when running the first time then comment it
-# import nltk
-# nltk.download('punkt')
-# nltk.download('stopwords')
-# nltk.download('wordnet')
+import nltk
+from nltk.data import find
 
 from flask import Flask, render_template, request
 import pandas as pd
@@ -12,6 +9,25 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+
+def download_nltk_data():
+    try:
+        find('tokenizers/punkt')
+    except LookupError:
+        nltk.download('punkt')
+
+    try:
+        find('corpora/stopwords')
+    except LookupError:
+        nltk.download('stopwords')
+
+    try:
+        find('corpora/wordnet')
+    except LookupError:
+        nltk.download('wordnet')
+
+download_nltk_data()
+
 
 app = Flask(__name__)
 
@@ -74,9 +90,9 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     query = request.form['query']
-    results = semantic_search(query, doc_vectors_title, doc_vectors_content, df)
+    num_results = int(request.form.get('num_results', 5))
+    results = semantic_search(query, doc_vectors_title, doc_vectors_content, df, top_n=num_results)
     return render_template('index.html', results=results)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
